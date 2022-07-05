@@ -15,7 +15,7 @@ defineProps({
 });
 const showModal = ref(false);
 
-const newStockForm = useForm({
+let newStockForm = useForm({
     name: null,
     brand: null,
     price: null,
@@ -23,7 +23,6 @@ const newStockForm = useForm({
     description: null,
 });
 const saveStock = ()=>{
-    console.log(11)
     newStockForm.post('/create-stock',{
         onSuccess:()=>newStockForm.clearErrors(),
     });

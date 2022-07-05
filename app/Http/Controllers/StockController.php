@@ -41,7 +41,7 @@ class StockController extends Controller
      */
     public function store(Request $request)
     {
-        Request::validate([
+        /*Request::validate([
             "name" => "required",
             "brand" => "required",
             "price" => "required",
@@ -55,7 +55,21 @@ class StockController extends Controller
                 "count_in_stock" => $request->count_in_stock,
                 "description" => $request->description,
             ]
-        );
+        );*/
+        $validator = Validator::make($request->all(),[
+            "name" => "required",
+            "brand" => "required",
+            "price" => "required",
+            "count_in_stock" => "required",
+        ]);
+        Stock::create([
+            "name" => $request->name,
+            "brand" => $request->brand,
+            "price" => $request->price,
+            "count_in_stock" => $request->count_in_stock,
+            "description" => $request->description,
+            "uuid"=>Str::uuid(),
+        ]);
         return \redirect()->route('stocks.index');
 
     }
