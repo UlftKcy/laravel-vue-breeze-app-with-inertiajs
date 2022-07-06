@@ -46,7 +46,7 @@ const saveStock = () => {
 };
 const deleteStock = (id)=>{
     Inertia.delete(`/destroy/${id}`);
-}
+};
 
 </script>
 
@@ -69,12 +69,12 @@ const deleteStock = (id)=>{
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">Product Name</th>
-                            <th scope="col">Product Brand</th>
-                            <th scope="col">Product Price</th>
-                            <th scope="col">Product Count in Stock</th>
-                            <th scope="col">Product Description</th>
-                            <th scope="col"></th>
+                            <th>Product Name</th>
+                            <th>Product Brand</th>
+                            <th>Product Price</th>
+                            <th>Product Count in Stock</th>
+                            <th>Product Description</th>
+                            <th></th>
                         </tr>
                         </thead>
                         <tbody>
