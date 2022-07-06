@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreStockRequest;
 use App\Models\Stock;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -10,17 +11,21 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
+use Inertia\ResponseFactory;
 
 class StockController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return Response
+     * @return \Inertia\Response|ResponseFactory
      */
     public function index()
     {
-        //
+        return Inertia::render('Stocks/Index', [
+            'stocks' => Stock::all(),
+        ]);
     }
 
     /**
@@ -39,39 +44,17 @@ class StockController extends Controller
      * @param Request $request
      * @return RedirectResponse
      */
-    public function store(Request $request)
+    public function store(StoreStockRequest $request)
     {
-        /*Request::validate([
-            "name" => "required",
-            "brand" => "required",
-            "price" => "required",
-            "count_in_stock" => "required",
-        ]);
-        Stock::create(
-            [
-                "name" => $request->name,
-                "brand" => $request->brand,
-                "price" => $request->price,
-                "count_in_stock" => $request->count_in_stock,
-                "description" => $request->description,
-            ]
-        );*/
-        $validator = Validator::make($request->all(),[
-            "name" => "required",
-            "brand" => "required",
-            "price" => "required",
-            "count_in_stock" => "required",
-        ]);
         Stock::create([
             "name" => $request->name,
             "brand" => $request->brand,
             "price" => $request->price,
             "count_in_stock" => $request->count_in_stock,
             "description" => $request->description,
-            "uuid"=>Str::uuid(),
+            "uuid" => Str::uuid(),
         ]);
-        return \redirect()->route('stocks.index');
-
+        return \redirect()->route('stocks.index')->with("message", "Stock created successfully");
     }
 
     /**
@@ -112,10 +95,11 @@ class StockController extends Controller
      * Remove the specified resource from storage.
      *
      * @param Stock $stock
-     * @return Response
+     * @return RedirectResponse
      */
     public function destroy(Stock $stock)
     {
-        //
+        $stock->delete();
+        return \redirect()->route('stocks.index')->with('message', 'Stock deleted successfully');
     }
 }

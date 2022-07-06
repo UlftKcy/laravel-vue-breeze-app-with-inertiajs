@@ -30,5 +30,7 @@ Route::get('/stocks', function () {
 })->middleware(['auth', 'verified'])->name('stocks.index');
 
 Route::post('/create-stock',[StockController::class,'store'])->name('create-stock.store');
+Route::get('/stocks',[StockController::class,'index'])->name('stocks.index');
+Route::delete('/destroy/{stock}',[StockController::class,'destroy'])->name('stock.destroy');
 
 require __DIR__.'/auth.php';

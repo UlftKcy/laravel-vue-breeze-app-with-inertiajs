@@ -1,17 +1,21 @@
 <script setup>
-import {Head, useForm} from '@inertiajs/inertia-vue3';
+import {Head, useForm, usePage} from '@inertiajs/inertia-vue3';
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import AddStockButton from "@/Components/Button.vue";
 import CreateProductModal from "@/Components/Modal.vue";
 import SaveButton from "@/Components/SaveButton.vue";
-
-import {reactive, ref} from "vue";
+import Swal from "sweetalert2";
+import {computed, ref} from "vue";
+import {Inertia} from "@inertiajs/inertia";
 
 defineProps({
     type: {
         type: String,
         default: 'button',
     },
+    errors: Object,
+    message: String,
+    stocks: Object,
 });
 const showModal = ref(false);
 
@@ -22,11 +26,28 @@ let newStockForm = useForm({
     count_in_stock: null,
     description: null,
 });
-const saveStock = ()=>{
-    newStockForm.post('/create-stock',{
-        onSuccess:()=>newStockForm.clearErrors(),
+
+const flashMessage = computed(() => usePage().props.value.flash.message)
+
+const saveStock = () => {
+    newStockForm.post('/create-stock', {
+        onSuccess: visit => {
+            newStockForm.reset();
+            showModal.value = false;
+            setTimeout(function () {
+                Swal.fire({
+                    title: 'Success',
+                    text: flashMessage.value,
+                    icon: 'success',
+                });
+            }, 100);
+        },
     });
 };
+const deleteStock = (id)=>{
+    Inertia.delete(`/destroy/${id}`);
+}
+
 </script>
 
 <template>
@@ -48,29 +69,29 @@ const saveStock = ()=>{
                     <table class="table">
                         <thead>
                         <tr>
-                            <th scope="col">#</th>
-                            <th scope="col">First</th>
-                            <th scope="col">Last</th>
-                            <th scope="col">Handle</th>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Product Brand</th>
+                            <th scope="col">Product Price</th>
+                            <th scope="col">Product Count in Stock</th>
+                            <th scope="col">Product Description</th>
+                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody>
-                        <tr>
-                            <th scope="row">1</th>
-                            <td>Mark</td>
-                            <td>Otto</td>
-                            <td>@mdo</td>
+                        <tr v-if="$props.stocks.length === 0">
+                            <td colspan="6" class="text-center">There is no data to show.</td>
                         </tr>
-                        <tr>
-                            <th scope="row">2</th>
-                            <td>Jacob</td>
-                            <td>Thornton</td>
-                            <td>@fat</td>
-                        </tr>
-                        <tr>
-                            <th scope="row">3</th>
-                            <td colspan="2">Larry the Bird</td>
-                            <td>@twitter</td>
+                        <tr v-else v-for="stock in $props.stocks">
+                            <th scope="row">{{ stock.name }}</th>
+                            <td>{{ stock.brand }}</td>
+                            <td>{{ stock.price }}</td>
+                            <td>{{ stock.count_in_stock }}</td>
+                            <td>{{ stock.description }}</td>
+                            <td>
+                                <button class="btn btn-success me-2"><i class="fa-solid fa-magnifying-glass"></i></button>
+                                <button class="btn btn-warning me-2"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="btn btn-danger me-2" @click="deleteStock(stock.id)"><i class="fa-solid fa-trash"></i></button>
+                            </td>
                         </tr>
                         </tbody>
                     </table>
@@ -86,54 +107,67 @@ const saveStock = ()=>{
             <form @submit.prevent="saveStock">
                 <div class="modal-body">
                     <slot name="body">
-                        <div>
+                        <div class="mb-3">
                             <label for="text" class="form-label">Stock Name : </label>
                             <input
                                 type="text"
                                 v-model="newStockForm.name"
                                 name="text"
                                 id="text"
-                                class="form-control"
+                                class="form-control rounded"
+                                :class="[errors.name ? 'border-red-600':'accent-gray-700']"
                             />
+                            <div class="text-sm text-red-600" v-if="errors.name">{{ errors.name }}</div>
                         </div>
-                        <div>
+
+                        <div class="mb-3">
                             <label for="text" class="form-label">Stock Brand : </label>
                             <input
                                 type="text"
                                 v-model="newStockForm.brand"
                                 name="text"
                                 id="text"
-                                class="form-control"
+                                class="form-control rounded"
+                                :class="[errors.name ? 'border-red-600':'accent-gray-700']"
                             />
+                            <div class="text-sm text-red-600" v-if="errors.brand">{{ errors.brand }}</div>
                         </div>
-                        <div>
+
+                        <div class="mb-3">
                             <label for="text" class="form-label">Stock Price : </label>
                             <input
                                 type="text"
                                 v-model="newStockForm.price"
                                 name="text"
                                 id="text"
-                                class="form-control"
+                                class="form-control rounded"
+                                :class="[errors.name ? 'border-red-600':'accent-gray-700']"
                             />
+                            <div class="text-sm text-red-600" v-if="errors.price">{{ errors.price }}</div>
                         </div>
-                        <div>
+
+                        <div class="mb-3">
                             <label for="text" class="form-label">Stock Count : </label>
                             <input
                                 type="text"
                                 v-model="newStockForm.count_in_stock"
                                 name="text"
                                 id="text"
-                                class="form-control"
+                                class="form-control rounded"
+                                :class="[errors.name ? 'border-red-600':'accent-gray-700']"
                             />
+                            <div class="text-sm text-red-600" v-if="errors.count_in_stock">{{ errors.count_in_stock }}</div>
                         </div>
-                        <div>
+
+                        <div class="mb-3">
                             <label for="text" class="form-label">Stock Description : </label>
                             <input
                                 type="text"
                                 v-model="newStockForm.description"
                                 name="text"
                                 id="text"
-                                class="form-control"
+                                class="form-control rounded"
+                                :class="[errors.name ? 'border-red-600':'accent-gray-700']"
                             />
                         </div>
                     </slot>
