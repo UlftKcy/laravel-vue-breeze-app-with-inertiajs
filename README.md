@@ -60,5 +60,6 @@ $ git clone https://github.com/UlftKcy/laravel-vue-breeze-app-with-inertiajs.git
   $ php artisan serve
 
 ## Contact
-- <a href="https://github.com/UlftKcy" target="_blank">GitHub</a> 
-- <a href="https://www.linkedin.com/in/ulfet-kacay/" target="_blank">Linkedin</a> 
+
+<a href="https://github.com/UlftKcy" target="_blank">GitHub</a> 
+<a href="https://www.linkedin.com/in/ulfet-kacay/" target="_blank">Linkedin</a> 
