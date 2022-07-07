@@ -52,13 +52,39 @@ const props = defineProps({
 }
 
 .modal-container {
-    width: 30%;
     margin: 0px auto;
     padding: 20px 30px;
     background-color: #fff;
     border-radius: 2px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
     transition: all 0.3s ease;
+}
+@media (max-width: 576px) {
+    .modal-container {
+        width: 90%;
+    }
+}
+@media (min-width: 576px) {
+    .modal-container {
+        width: 60%;
+    }
+}
+
+@media (min-width: 768px) {
+    .modal-container {
+        width: 50%;
+    }
+}
+@media (min-width: 992px) {
+    .modal-container {
+        width: 40%;
+    }
+}
+
+@media (min-width: 1200px) {
+    .modal-container {
+        width: 30%;
+    }
 }
 
 .modal-header h3 {

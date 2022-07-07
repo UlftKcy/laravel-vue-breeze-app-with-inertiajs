@@ -30,7 +30,7 @@ let newStockForm = useForm({
     description: null,
 });
 let editStockForm = useForm({
-    id:null,
+    id: null,
     name: null,
     brand: null,
     price: null,
@@ -55,7 +55,7 @@ const saveStock = () => {
 };
 const editModal = (id) => {
     showEditModal.value = true;
-    const stock = usePage().props.value.stocks.find(stock=>stock.id === id);
+    const stock = usePage().props.value.stocks.find(stock => stock.id === id);
     editStockForm.id = stock.id;
     editStockForm.name = stock.name;
     editStockForm.brand = stock.brand;
@@ -99,36 +99,37 @@ const deleteStock = (id) => {
         </template>
         <template #content>
             <div class="card">
-                <div class="card-body">
-                    <table class="table">
-                        <thead>
-                        <tr>
-                            <th>Product Name</th>
-                            <th>Product Brand</th>
-                            <th>Product Price</th>
-                            <th>Product Count in Stock</th>
-                            <th>Product Description</th>
-                            <th></th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr v-if="$props.stocks.length === 0">
-                            <td colspan="6" class="text-center">There is no data to show.</td>
-                        </tr>
-                        <tr v-else v-for="stock in $props.stocks">
-                            <th scope="row">{{ stock.name }}</th>
-                            <td>{{ stock.brand }}</td>
-                            <td>{{ stock.price }}</td>
-                            <td>{{ stock.count_in_stock }}</td>
-                            <td>{{ stock.description }}</td>
-                            <td>
-                                <button class="btn btn-success me-2"><i class="fa-solid fa-magnifying-glass"></i></button>
-                                <button class="btn btn-warning me-2" @click="editModal(stock.id)"><i class="fa-solid fa-pen-to-square"></i></button>
-                                <button class="btn btn-danger me-2" @click="deleteStock(stock.id)"><i class="fa-solid fa-trash"></i></button>
-                            </td>
-                        </tr>
-                        </tbody>
-                    </table>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover table-borderless align-middle">
+                            <thead class="table-dark">
+                            <tr>
+                                <th class="p-3" style="min-width: 150px;">Product Name</th>
+                                <th class="p-3" style="min-width: 150px;">Product Brand</th>
+                                <th class="p-3" style="min-width: 150px;">Product Price</th>
+                                <th class="p-3" style="min-width: 250px;">Product Count in Stock</th>
+                                <th class="p-3" style="min-width: 250px;">Product Description</th>
+                                <th class="p-3" style="min-width: 150px;"></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-if="$props.stocks.length === 0">
+                                <td colspan="6" class="text-center">There is no data to show.</td>
+                            </tr>
+                            <tr v-else v-for="stock in $props.stocks">
+                                <th scope="row">{{ stock.name }}</th>
+                                <td>{{ stock.brand }}</td>
+                                <td>{{ stock.price }}</td>
+                                <td>{{ stock.count_in_stock }}</td>
+                                <td>{{ stock.description }}</td>
+                                <td>
+                                    <button class="btn btn-warning me-2" @click="editModal(stock.id)"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button class="btn btn-danger me-2" @click="deleteStock(stock.id)"><i class="fa-solid fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
             </div>
         </template>
