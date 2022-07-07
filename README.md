@@ -61,5 +61,7 @@ $ git clone https://github.com/UlftKcy/laravel-vue-breeze-app-with-inertiajs.git
 
 ## Contact
 
-<a href="https://github.com/UlftKcy" target="_blank">GitHub</a> 
-<a href="https://www.linkedin.com/in/ulfet-kacay/" target="_blank">Linkedin</a> 
+[GitHub] (https://github.com/UlftKcy)
+[Linkedin] (https://www.linkedin.com/in/ulfet-kacay/)
+
+See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
