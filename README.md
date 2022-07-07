@@ -61,5 +61,5 @@ $ git clone https://github.com/UlftKcy/laravel-vue-breeze-app-with-inertiajs.git
 
 ## Contact
 
-- GitHub [@UlftKcy](https://github.com/UlftKcy).
-- Linkedin [@ülfet-kacay](https://www.linkedin.com/in/ulfet-kacay/).
+- [GitHub] (https://github.com/UlftKcy).
+- [Linkedin] (https://www.linkedin.com/in/ulfet-kacay/).
