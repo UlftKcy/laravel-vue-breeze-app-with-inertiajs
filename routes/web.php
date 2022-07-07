@@ -17,7 +17,7 @@ use Inertia\Inertia;
 */
 
 Route::get('/', function () {
-    return Inertia::render('Welcome', [
+    return Inertia::render('Auth/Register', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
         'laravelVersion' => Application::VERSION,
@@ -25,13 +25,11 @@ Route::get('/', function () {
     ]);
 });
 
-Route::get('/stocks', function () {
-    return Inertia::render('Stocks/Index');
-})->middleware(['auth', 'verified'])->name('stocks.index');
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::post('/create-stock', [StockController::class, 'store'])->name('create-stock.store');
+    Route::get('/stocks', [StockController::class, 'index'])->name('stocks.index');
+    Route::delete('/destroy/{stock}', [StockController::class, 'destroy'])->name('stock.destroy');
+    Route::post('/update-stock/{id}', [StockController::class, 'update'])->name('update-stock.update');
+});
 
-Route::post('/create-stock',[StockController::class,'store'])->name('create-stock.store');
-Route::get('/stocks',[StockController::class,'index'])->name('stocks.index');
-Route::delete('/destroy/{stock}',[StockController::class,'destroy'])->name('stock.destroy');
-Route::post('/update-stock/{id}',[StockController::class,'update'])->name('update-stock.update');
-
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

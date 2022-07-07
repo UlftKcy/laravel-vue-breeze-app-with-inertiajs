@@ -53,6 +53,7 @@ class StockController extends Controller
             "count_in_stock" => $request->count_in_stock,
             "description" => $request->description,
             "uuid" => Str::uuid(),
+            "user_id" => auth()->id(),
         ]);
         return \redirect()->route('stocks.index')->with("message", "Stock created successfully");
     }

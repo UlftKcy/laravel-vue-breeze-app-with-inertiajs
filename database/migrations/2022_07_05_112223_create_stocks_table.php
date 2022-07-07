@@ -20,8 +20,11 @@ return new class extends Migration {
             $table->string('price');
             $table->string("count_in_stock");
             $table->text('description')->nullable();
+            $table->bigInteger("user_id")->unsigned();
             $table->softDeletes();
             $table->timestamps();
+
+            $table->foreign("user_id")->references("id")->on("users")->cascadeOnDelete();
         });
     }
 

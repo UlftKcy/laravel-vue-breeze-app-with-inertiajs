@@ -21,6 +21,7 @@ defineProps({
 const showCreateModal = ref(false);
 const showEditModal = ref(false);
 const flashMessage = computed(() => usePage().props.value.flash.message)
+const auth_user = computed(() => usePage().props.value.auth.user);
 
 let newStockForm = useForm({
     name: null,
@@ -123,8 +124,8 @@ const deleteStock = (id) => {
                                 <td>{{ stock.count_in_stock }}</td>
                                 <td>{{ stock.description }}</td>
                                 <td>
-                                    <button class="btn btn-warning me-2" @click="editModal(stock.id)"><i class="fa-solid fa-pen-to-square"></i></button>
-                                    <button class="btn btn-danger me-2" @click="deleteStock(stock.id)"><i class="fa-solid fa-trash"></i></button>
+                                    <button :class="[stock.user_id === auth_user.id ? '': 'disabled']" class="btn btn-warning me-2" @click="editModal(stock.id)"><i class="fa-solid fa-pen-to-square"></i></button>
+                                    <button :class="[stock.user_id === auth_user.id ? '': 'disabled']" class="btn btn-danger me-2" @click="deleteStock(stock.id)"><i class="fa-solid fa-trash"></i></button>
                                 </td>
                             </tr>
                             </tbody>
