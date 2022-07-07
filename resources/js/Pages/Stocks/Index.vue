@@ -3,6 +3,7 @@ import {Head, useForm, usePage} from '@inertiajs/inertia-vue3';
 import BreezeAuthenticatedLayout from '@/Layouts/Authenticated.vue';
 import AddStockButton from "@/Components/Button.vue";
 import CreateProductModal from "@/Components/Modal.vue";
+import EditProductModal from "@/Components/Modal.vue";
 import SaveButton from "@/Components/SaveButton.vue";
 import Swal from "sweetalert2";
 import {computed, ref} from "vue";
@@ -17,7 +18,9 @@ defineProps({
     message: String,
     stocks: Object,
 });
-const showModal = ref(false);
+const showCreateModal = ref(false);
+const showEditModal = ref(false);
+const flashMessage = computed(() => usePage().props.value.flash.message)
 
 let newStockForm = useForm({
     name: null,
@@ -26,14 +29,20 @@ let newStockForm = useForm({
     count_in_stock: null,
     description: null,
 });
-
-const flashMessage = computed(() => usePage().props.value.flash.message)
+let editStockForm = useForm({
+    id:null,
+    name: null,
+    brand: null,
+    price: null,
+    count_in_stock: null,
+    description: null,
+});
 
 const saveStock = () => {
     newStockForm.post('/create-stock', {
         onSuccess: visit => {
             newStockForm.reset();
-            showModal.value = false;
+            showCreateModal.value = false;
             setTimeout(function () {
                 Swal.fire({
                     title: 'Success',
@@ -44,7 +53,32 @@ const saveStock = () => {
         },
     });
 };
-const deleteStock = (id)=>{
+const editModal = (id) => {
+    showEditModal.value = true;
+    const stock = usePage().props.value.stocks.find(stock=>stock.id === id);
+    editStockForm.id = stock.id;
+    editStockForm.name = stock.name;
+    editStockForm.brand = stock.brand;
+    editStockForm.price = stock.price;
+    editStockForm.count_in_stock = stock.count_in_stock;
+    editStockForm.description = stock.description;
+}
+const editStock = (id) => {
+    editStockForm.post(`/update-stock/${id}`, {
+        onSuccess: visit => {
+            editStockForm.reset();
+            showEditModal.value = false;
+            setTimeout(function () {
+                Swal.fire({
+                    title: 'Success',
+                    text: flashMessage.value,
+                    icon: 'success',
+                });
+            }, 100);
+        },
+    });
+};
+const deleteStock = (id) => {
     Inertia.delete(`/destroy/${id}`);
 };
 
@@ -58,7 +92,7 @@ const deleteStock = (id)=>{
                 <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                     Stocks
                 </h2>
-                <AddStockButton :type=type @click="showModal =true">
+                <AddStockButton :type=type @click="showCreateModal =true">
                     Add Stock
                 </AddStockButton>
             </div>
@@ -89,7 +123,7 @@ const deleteStock = (id)=>{
                             <td>{{ stock.description }}</td>
                             <td>
                                 <button class="btn btn-success me-2"><i class="fa-solid fa-magnifying-glass"></i></button>
-                                <button class="btn btn-warning me-2"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="btn btn-warning me-2" @click="editModal(stock.id)"><i class="fa-solid fa-pen-to-square"></i></button>
                                 <button class="btn btn-danger me-2" @click="deleteStock(stock.id)"><i class="fa-solid fa-trash"></i></button>
                             </td>
                         </tr>
@@ -99,7 +133,7 @@ const deleteStock = (id)=>{
             </div>
         </template>
     </BreezeAuthenticatedLayout>
-    <CreateProductModal :show="showModal" @close="showModal=false">
+    <CreateProductModal :show="showCreateModal" @close="showCreateModal=false">
         <template #header>
             <h3>Add Stock</h3>
         </template>
@@ -173,9 +207,88 @@ const deleteStock = (id)=>{
                     </slot>
                 </div>
                 <SaveButton class="modal-default-button btn btn-success">
-                    Kaydet
+                    Save
                 </SaveButton>
             </form>
         </template>
     </CreateProductModal>
+    <EditProductModal :show="showEditModal" @close="showEditModal=false">
+        <template #header>
+            <h3>Edit Stock</h3>
+        </template>
+        <template #body>
+            <form @submit.prevent="editStock(editStockForm.id)">
+                <div class="modal-body">
+                    <slot name="body">
+                        <div class="mb-3">
+                            <label for="text" class="form-label">Stock Name : </label>
+                            <input
+                                type="text"
+                                v-model="editStockForm.name"
+                                name="text"
+                                id="text"
+                                class="form-control rounded"
+                                :class="[errors.name ? 'border-red-600':'accent-gray-700']"
+                            />
+                            <div class="text-sm text-red-600" v-if="errors.name">{{ errors.name }}</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="text" class="form-label">Stock Brand : </label>
+                            <input
+                                type="text"
+                                v-model="editStockForm.brand"
+                                name="text"
+                                id="text"
+                                class="form-control rounded"
+                                :class="[errors.name ? 'border-red-600':'accent-gray-700']"
+                            />
+                            <div class="text-sm text-red-600" v-if="errors.brand">{{ errors.brand }}</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="text" class="form-label">Stock Price : </label>
+                            <input
+                                type="text"
+                                v-model="editStockForm.price"
+                                name="text"
+                                id="text"
+                                class="form-control rounded"
+                                :class="[errors.name ? 'border-red-600':'accent-gray-700']"
+                            />
+                            <div class="text-sm text-red-600" v-if="errors.price">{{ errors.price }}</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="text" class="form-label">Stock Count : </label>
+                            <input
+                                type="text"
+                                v-model="editStockForm.count_in_stock"
+                                name="text"
+                                id="text"
+                                class="form-control rounded"
+                                :class="[errors.name ? 'border-red-600':'accent-gray-700']"
+                            />
+                            <div class="text-sm text-red-600" v-if="errors.count_in_stock">{{ errors.count_in_stock }}</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="text" class="form-label">Stock Description : </label>
+                            <input
+                                type="text"
+                                v-model="editStockForm.description"
+                                name="text"
+                                id="text"
+                                class="form-control rounded"
+                                :class="[errors.name ? 'border-red-600':'accent-gray-700']"
+                            />
+                        </div>
+                    </slot>
+                </div>
+                <SaveButton class="modal-default-button btn btn-success">
+                    Edit
+                </SaveButton>
+            </form>
+        </template>
+    </EditProductModal>
 </template>

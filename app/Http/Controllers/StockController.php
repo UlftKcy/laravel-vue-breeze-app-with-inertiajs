@@ -72,7 +72,7 @@ class StockController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param Stock $stock
-     * @return Response
+     * @return \Inertia\Response
      */
     public function edit(Stock $stock)
     {
@@ -82,13 +82,15 @@ class StockController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
+     * @param StoreStockRequest $request
      * @param Stock $stock
-     * @return Response
+     * @return RedirectResponse
      */
-    public function update(Request $request, Stock $stock)
+    public function update(StoreStockRequest $request, Stock $stock)
     {
-        //
+        $stock = Stock::query()->where("id", "=", $request->id)->first();
+        $stock->update($request->validated());
+        return \redirect()->route('stocks.index')->with("message", "Stock updated successfully");
     }
 
     /**

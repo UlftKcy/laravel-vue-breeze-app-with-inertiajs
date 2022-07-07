@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Str;
 
 class StoreStockRequest extends FormRequest
 {
@@ -28,6 +29,7 @@ class StoreStockRequest extends FormRequest
             "brand" => "required",
             "price" => "required",
             "count_in_stock" => "required",
+            "description" => "required",
         ];
     }
 }

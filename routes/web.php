@@ -32,5 +32,6 @@ Route::get('/stocks', function () {
 Route::post('/create-stock',[StockController::class,'store'])->name('create-stock.store');
 Route::get('/stocks',[StockController::class,'index'])->name('stocks.index');
 Route::delete('/destroy/{stock}',[StockController::class,'destroy'])->name('stock.destroy');
+Route::post('/update-stock/{id}',[StockController::class,'update'])->name('update-stock.update');
 
 require __DIR__.'/auth.php';
