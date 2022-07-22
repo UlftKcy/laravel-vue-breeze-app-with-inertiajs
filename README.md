@@ -3,7 +3,6 @@
 
 <div align="center">
   <h3>
-  !link will be added
     <a href="#">
       Project
     </a>
